@@ -5,10 +5,15 @@ const {
 } = require('../../lib/auth')
 
 
-const login = async (obj, { email, password }) => {
+const login = async (obj, { email, password }, context) => {
+  // if (!context.user) {
+  //   throw new Error('Invalid token');
+  // }
+
   const user = await User.query().findOne({
     email,
   })
+
   if (!user) {
     throw new UserInputError('Invalid email or password')
   }
@@ -16,7 +21,7 @@ const login = async (obj, { email, password }) => {
   const validPassword = await comparePassword(password, user.password)
   if (!validPassword) {
     throw new UserInputError('Invalid email or password')
-  }
+  } 
 
 
   // If successful login, set authentication information
